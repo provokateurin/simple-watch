@@ -3,12 +3,13 @@
 <head>
     <title>simple-watch</title>
     <link rel="stylesheet" href="rooms.css">
+	<link rel="shortcut icon" type="image/x-icon" href="../images/simplewatch_logo.png">
 </head>
 <body>
 <div>
     <form id="video-url-form">
-        <input type="url" id="video-url-input" placeholder="Youtube video URL"/>
-        <input type="submit" id="video-url-submit" value="Play"/>
+        <input type="url" id="video-url-input" placeholder="Paste a YouTube video URL ..."/>
+        <input type="image" name="submit" src="../images/lupe_icon.png" id="video-url-submit"/>
     </form>
     <video id="video" controls></video>
 </div>
@@ -19,3 +20,5 @@
 <script src="youtube_extractor.js"></script>
 <script src="rooms.js"></script>
 </html>
+
+<!-- <input type="submit" id="video-url-submit" value="Play"/> -->

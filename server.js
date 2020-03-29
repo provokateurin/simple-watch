@@ -9,28 +9,36 @@ server.listen(8000);
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use('/js-cookie', express.static(__dirname + '/node_modules/js-cookie/src/'));
 
-app.get('/script.js', function (req, res) {
-    res.sendFile(__dirname + '/index/script.js');
+app.get('/index.css', function (req, res) {
+    res.sendFile(__dirname + '/index/index.css');
+});
+
+app.get('/index.js', function (req, res) {
+    res.sendFile(__dirname + '/index/index.js');
 });
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index/index.html');
 });
 
-app.get('/rooms/script.js', function (req, res) {
-    res.sendFile(__dirname + '/rooms/script.js');
+app.get('/rooms/rooms.css', function (req, res) {
+    res.sendFile(__dirname + '/rooms/rooms.css');
+});
+
+app.get('/rooms/rooms.js', function (req, res) {
+    res.sendFile(__dirname + '/rooms/rooms.js');
 });
 
 app.get('/rooms/youtube_extractor.js', function (req, res) {
     res.sendFile(__dirname + '/rooms/youtube_extractor.js');
 });
 
-app.get('/rooms', (req, res) => {
-    res.redirect('/');
-});
-
 app.get('/rooms/*', function (req, res) {
     res.sendFile(__dirname + '/rooms/rooms.html');
+});
+
+app.get('/rooms', (req, res) => {
+    res.redirect('/');
 });
 
 app.get('/internal/video/:id', async (req, res) => {

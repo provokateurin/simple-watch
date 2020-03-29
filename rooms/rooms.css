@@ -1,0 +1,45 @@
+* {
+	top: 0;
+	bottom: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: white;
+	margin: 0;
+	padding: 0;
+}
+
+#video-url-form {
+	margin-left: 1%;
+	margin-top: 1%;
+	display: flex;
+}
+
+#video-url-input {
+	padding: 0.75%;
+	font-size: 1.05em;
+	width: 50%;
+	border-style: none;
+	box-shadow: 0px 0px 4px black;
+}
+
+#video-url-submit {
+	padding: 8px;
+	width: 3%;
+	border-style: none;
+	background: lightgray;
+	/* background: url("../../../../Desktop/Lupe Icon.png");
+	background-size: cover;
+	background-repeat: no-repeat; */
+	box-shadow: 0px 0px 4px black;
+	transition: all 0.15s ease;
+	color: transparent;
+}
+
+#video-url-submit:hover {
+	background: #18b1ed;
+	cursor: pointer;
+}

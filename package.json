@@ -1,0 +1,20 @@
+{
+  "name": "simple-watch",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/jld3103/simple-watch/tree/master/web",
+  "author": "jld3103",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "got": "^10.7.0",
+    "http": "^0.0.1-security",
+    "jquery": "^3.4.1",
+    "js-cookie": "^2.2.1",
+    "socket.io": "^2.3.0"
+  }
+}

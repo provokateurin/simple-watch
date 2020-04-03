@@ -3,13 +3,17 @@
 <head>
     <title>simple-watch</title>
     <link rel="stylesheet" href="index.css">
-	<link rel="shortcut icon" type="image/x-icon" href="../images/simplewatch_logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/simplewatch_logo.png">
 </head>
 <body>
 <div>
-
+    <form id="create-room-form">
+        <input type="url" id="create-room-input" placeholder="(optional) Youtube video URL"/>
+        <input type="submit" id="create-room-submit" value="Create room"/>
+    </form>
 </div>
 </body>
 <script src="/jquery/jquery.js"></script>
+<script src="/js-cookie/js.cookie.js"></script>
 <script src="index.js"></script>
 </html>

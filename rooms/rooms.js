@@ -12,7 +12,7 @@ const video = $('#video');
 let selfTrigger = 0;
 
 const socket = io.connect(window.location.href.replace(window.location.pathname, ''));
-socket.on('connect', () => {
+socket.on('connect', async () => {
     socket.on('state', (data) => {
         console.log('state', data);
     });
@@ -21,7 +21,7 @@ socket.on('connect', () => {
     });
     socket.on('video', (data) => {
         console.log('video', data);
-        showVideo(data);
+        showVideoFromMeta(data);
     });
     socket.on('play', () => {
         console.log('play');
@@ -58,12 +58,7 @@ socket.on('connect', () => {
     $('#video-url-form').submit(async event => {
         event.preventDefault();
         const url = $('#video-url-input').val();
-        const videoMeta = await videoMetaFromYoutubeVideoId(parseYoutubeURL(url));
-        Cookies.set(roomId + '-video', url);
-        socket.emit('pause');
-        socket.emit('video', videoMeta);
-        socket.emit('play');
-        showVideo(videoMeta);
+        await showVideoFromURL(roomId, url);
     });
 
     video.on('play', () => {
@@ -87,9 +82,25 @@ socket.on('connect', () => {
             selfTrigger--;
         }
     });
+    const play = Cookies.get('play');
+    if (play) {
+        $('#video-url-form').submit();
+        Cookies.set('play', false);
+    }
 });
 
-const showVideo = data => {
+const showVideoFromURL = async (roomId, url) => {
+    console.log(`roomId: ${roomId} url: ${url}`);
+    const videoMeta = await videoMetaFromYoutubeVideoId(parseYoutubeURL(url));
+    console.log(videoMeta);
+    Cookies.set(roomId + '-video', url);
+    socket.emit('pause');
+    socket.emit('video', videoMeta);
+    socket.emit('play');
+    showVideoFromMeta(videoMeta);
+};
+
+const showVideoFromMeta = data => {
     video.prop('width', data.width);
     video.prop('height', data.height);
     video.html(`<source src="${data.url}" type="${data.mimeType}" />`);

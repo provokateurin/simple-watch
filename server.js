@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
             if (rooms[roomId].participants.length === 0) {
                 // If no clients are left in the room wait 30 seconds before deleting it finally
                 setTimeout(() => {
-                    if (rooms[roomId].participants.length === 0) {
+                    if (rooms[roomId] !== undefined && rooms[roomId].participants.length === 0) {
                         rooms[roomId] = undefined;
                         delete rooms[roomId];
                     }

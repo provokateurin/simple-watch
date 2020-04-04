@@ -49,13 +49,39 @@ app.get('/rooms', (req, res) => {
 });
 
 app.get('/internal/video/:id', async (req, res) => {
-    res.type('html');
     try {
         const response = await got('https://www.youtube.com/watch?v=' + req.params.id);
-        res.send(response.body);
+        const text = await response.body;
+
+        //determine if the video is valid
+        const isValid = text.split('ytplayer.config = ')[1];
+        if (!isValid) {
+            return {'error': 'Invalid video id'};
+        }
+
+        //TODO - better check if valid video id
+
+        //strip down to just json
+        const fullJSON = isValid.split(';ytplayer.load')[0];
+        const obj = JSON.parse(fullJSON);
+
+        const videoInfo = obj['args']['player_response'];
+        const clean = videoInfo.replace('\u0026', '&');
+        const data = JSON.parse(clean);
+
+        //sort by highest resolution
+        const formats = data.streamingData.formats.sort((a, b) => (a.width > b.width ? -1 : 1));
+        const format = formats[0];
+        res.json({
+            'url': format.url,
+            'width': format.width,
+            'height': format.height,
+            'mimeType': format.mimeType,
+            'thumbnailUrl': `https://i3.ytimg.com/vi/${req.params.id}/maxresdefault.jpg`,
+        });
     } catch (error) {
-        console.log(error.response.body);
-        res.send('Failed to load Youtube');
+        console.log(error);
+        res.json({'error': 'Failed to load Youtube'});
     }
 })
 

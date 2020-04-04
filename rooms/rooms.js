@@ -74,9 +74,8 @@ socket.on('connect', async () => {
 });
 
 const showVideoFromURL = async (roomId, url) => {
-    console.log(`roomId: ${roomId} url: ${url}`);
-    const videoMeta = await videoMetaFromYoutubeVideoId(parseYoutubeURL(url));
-    console.log(videoMeta);
+    const response = await fetch(window.location.href.replace(window.location.pathname, '') + '/internal/video/' + parseYoutubeURL(url));
+    const videoMeta = await response.json();
     Cookies.set(roomId + '-video', url);
     socket.emit('video', videoMeta);
     showVideoFromMeta(videoMeta);

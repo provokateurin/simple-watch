@@ -7,12 +7,42 @@
     <link rel="shortcut icon" type="image/x-icon" href="../images/simplewatch_logo.png">
 </head>
 <body>
-<div>
-    <form id="video-url-form">
-        <input type="url" id="video-url-input" placeholder="Paste a YouTube video URL ..."/>
-        <input type="image" name="submit" src="../images/lupe_icon.png" id="video-url-submit"/>
-    </form>
-    <video id="video" controls></video>
+<div id="main">
+	<div id="navbar">
+		<form id="video-url-form">
+			<input type="url" id="video-url-input" placeholder="Paste a YouTube video URL ..."/>
+			<input type="image" name="submit" src="../images/lupe_icon.png" id="video-url-submit"/>
+			<img src="../images/simplewatch_logo_transparent.png" id="simplewatch_icon"></img>
+		</form>
+	</div>
+	<div id="grid_container">
+		<div id="left_container">
+			<div class="grid_item" id="video_section">
+				<video id="video" controls></video>
+			</div>
+			<div class="grid_item" id="trend_section">
+				<div id="inner_trend">
+					<img src="../images/trends_thumbnail.jpg" class="boxvideo" style="margin-top: 2%"></img>
+					<img src="../images/trends_thumbnail.jpg" class="boxvideo"></img>
+					<img src="../images/trends_thumbnail.jpg" class="boxvideo"></img>
+					<img src="../images/trends_thumbnail.jpg" class="boxvideo"></img>
+					<img src="../images/trends_thumbnail.jpg" class="boxvideo"></img>
+					<img src="../images/trends_thumbnail.jpg" class="boxvideo"></img>
+				</div>
+			</div>
+		</div>
+		<div class="grid_item" id="control_section">
+				<div class="reiter" id="aktiverReiter">
+					<h2>QUEUE</h2>
+				</div>
+				<div class="reiter">
+					<h2>CONTROLS</h2>
+				</div>
+				<div class="reiter">
+					<h2>MEMBERS</h2>
+				</div>
+		</div>
+	</div>
 </div>
 <form id="interaction-dialog" class="modal">
     <p>You are joining a video channel</p>

@@ -2,7 +2,7 @@
   "name": "simple-watch",
   "version": "1.0.0",
   "main": "server.js",
-  "repository": "https://github.com/jld3103/simple-watch/tree/master/web",
+  "repository": "https://github.com/jld3103/simple-watch",
   "author": "jld3103",
   "license": "MIT",
   "private": false,
@@ -13,9 +13,6 @@
     "express": "^4.17.1",
     "got": "^10.7.0",
     "http": "^0.0.1-security",
-    "jquery": "^3.4.1",
-    "jquery-modal": "^0.9.2",
-    "js-cookie": "^2.2.1",
     "socket.io": "^2.3.0"
   }
 }

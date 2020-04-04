@@ -6,10 +6,6 @@ const got = require('got');
 
 server.listen(8000);
 
-app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
-app.use('/js-cookie', express.static(__dirname + '/node_modules/js-cookie/src/'));
-app.use('/jquery-modal', express.static(__dirname + '/node_modules/jquery-modal/'));
-
 app.use('/images', express.static(__dirname + '/images'));
 
 app.get('/index.css', function (req, res) {

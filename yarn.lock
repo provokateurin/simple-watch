@@ -37,9 +37,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "13.9.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.9.5.tgz#59738bf30b31aea1faa2df7f4a5f55613750cf00"
-  integrity sha512-hkzMMD3xu6BrJpGVLeQ3htQQNAcOrJjX7WFmtK8zWQpz2UJf13LCFF2ALA7c9OVdvc2vQJeDdjfR35M0sBCxvw==
+  version "13.11.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.11.0.tgz#390ea202539c61c8fa6ba4428b57e05bc36dc47b"
+  integrity sha512-uM4mnmsIIPK/yeO+42F2RQhGUIs39K2RFmugcJANppXe6J1nvH87PvzPZYpza7Xhhs8Yn9yIAVdLZ84z61+0xQ==
 
 "@types/responselike@*":
   version "1.0.0"
@@ -476,6 +476,11 @@ isarray@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-2.0.1.tgz#a37d94ed9cda2d59865c9f76fe596ee1f338741e"
   integrity sha1-o32U7ZzaLVmGXJ92/llu4fM4dB4=
+
+jquery-modal@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/jquery-modal/-/jquery-modal-0.9.2.tgz#dbc046ec93440c46466fa8e21a6fc38c102a3ded"
+  integrity sha512-Bx6jTBuiUbdywriWd0UAZK9v7FKEDCOD5uRh47qd4coGvx+dG4w8cOGe4TG2OoR1dNrXn6Aqaeu8MAA+Oz7vOw==
 
 jquery@^3.4.1:
   version "3.4.1"

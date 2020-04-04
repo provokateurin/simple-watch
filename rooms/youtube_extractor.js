@@ -28,5 +28,6 @@ const videoMetaFromYoutubeVideoId = async id => {
         'width': format.width,
         'height': format.height,
         'mimeType': format.mimeType,
+        'thumbnailUrl': `https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`,
     };
 };

@@ -3,7 +3,8 @@
 <head>
     <title>simple-watch</title>
     <link rel="stylesheet" href="rooms.css">
-	<link rel="shortcut icon" type="image/x-icon" href="../images/simplewatch_logo.png">
+    <link rel="stylesheet" href="/jquery-modal/jquery.modal.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/simplewatch_logo.png">
 </head>
 <body>
 <div>
@@ -13,12 +14,15 @@
     </form>
     <video id="video" controls></video>
 </div>
+<form id="interaction-dialog" class="modal">
+    <p>Du tritts diesem Video-Raum bei.</p>
+</form>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/jquery/jquery.js"></script>
 <script src="/js-cookie/js.cookie.js"></script>
+<script src="/jquery-modal/jquery.modal.min.js"></script>
 <script src="youtube_extractor.js"></script>
+<script src="utils.js"></script>
 <script src="rooms.js"></script>
 </html>
-
-<!-- <input type="submit" id="video-url-submit" value="Play"/> -->

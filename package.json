@@ -10,10 +10,14 @@
     "start": "node ."
   },
   "dependencies": {
+    "cucumber": "^6.0.5",
     "express": "^4.17.1",
     "got": "^10.7.0",
     "http": "^0.0.1-security",
     "socket.io": "^2.3.0",
     "ytdl-core": "^2.0.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0"
   }
 }

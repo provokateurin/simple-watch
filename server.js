@@ -57,6 +57,7 @@ app.get('/internal/video/:id', async (req, res) => {
             'url': format.url,
             'mimeType': format.mimeType,
             'thumbnailUrl': `https://i3.ytimg.com/vi/${req.params.id}/maxresdefault.jpg`,
+            'title': info.player_response.videoDetails.title,
         });
     } catch (error) {
         console.log(error);

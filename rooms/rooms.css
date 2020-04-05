@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 * {
 	top: 0;
 	bottom: 0;
@@ -5,8 +7,6 @@
 	margin: 0;
 	padding: 0;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
 	background: #444444;
@@ -84,16 +84,9 @@ body {
 	grid-template-rows: 1fr 100%;
 }
 
-	#video_section {
-		background: pink;
+	video {
+		width: 100%;
 	}
-	
-		video {
-			background: url(../images/preview_thumbnail.jpg);
-			background-size: cover;
-			background-position: center;
-			width: 100%;
-		}
 
 	#trend_section {
 		background: #414141;
@@ -103,11 +96,11 @@ body {
 		height: 25vh;
 		box-shadow: inset 0 2px 5px black;
 	}
-	
+
 		#inner_trend {
 			margin-left: 2%;
 		}
-	
+
 		.boxvideo {
 		width: 23%;
 		margin-left: 1%;
@@ -117,7 +110,7 @@ body {
 		cursor: pointer;
 		transition: all 0.15s ease;
 		}
-		
+
 			.boxvideo:hover {
 				filter: brightness(125%);
 			}
@@ -146,7 +139,7 @@ body {
 		transition: all 0.15s ease;
 		cursor: pointer;
 	}
-	
+
 	.reiter h2 {
 		text-align: center;
 		color: white;
@@ -154,16 +147,16 @@ body {
 		padding: 4px;
 		text-shadow: 1px 1px 2px black;
 	}
-	
+
 		.reiter:hover {
 			background: #18b1ed;
 		}
-	
+
 	#aktiverReiter {
 		background: #4e4e4e;
 		box-shadow: inset 0 -1px 2px black;
 	}
-	
+
 		#aktiverReiter:hover {
 			background: #18b1ed;
 		}

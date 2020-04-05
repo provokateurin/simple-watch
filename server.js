@@ -3,6 +3,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const got = require('got');
+const ytdl = require('ytdl-core');
 
 server.listen(8000);
 
@@ -46,40 +47,68 @@ app.get('/rooms', (req, res) => {
 
 app.get('/internal/video/:id', async (req, res) => {
     try {
-        const response = await got('https://www.youtube.com/watch?v=' + req.params.id);
-        const text = await response.body;
-
-        //determine if the video is valid
-        const isValid = text.split('ytplayer.config = ')[1];
-        if (!isValid) {
-            return {'error': 'Invalid video id'};
-        }
-
-        //TODO - better check if valid video id
-
-        //strip down to just json
-        const fullJSON = isValid.split(';ytplayer.load')[0];
-        const obj = JSON.parse(fullJSON);
-
-        const videoInfo = obj['args']['player_response'];
-        const clean = videoInfo.replace('\u0026', '&');
-        const data = JSON.parse(clean);
-
-        //sort by highest resolution
-        const formats = data.streamingData.formats.sort((a, b) => (a.width > b.width ? -1 : 1));
+        const url = `https://youtube.com/watch?v=${req.params.id}`;
+        const info = await ytdl.getInfo(url);
+        const formats = info.player_response.streamingData.formats
+            .sort((a, b) => (a.width > b.width ? -1 : 1))
+            .filter(format => format.url !== undefined);
         const format = formats[0];
         res.json({
             'url': format.url,
-            'width': format.width,
-            'height': format.height,
             'mimeType': format.mimeType,
             'thumbnailUrl': `https://i3.ytimg.com/vi/${req.params.id}/maxresdefault.jpg`,
         });
     } catch (error) {
         console.log(error);
+        res.json({
+            'error': 'Failed to load Youtube',
+        });
+    }
+});
+
+app.get('/internal/trends', async (req, res) => {
+    try {
+        const headers = req.headers;
+        delete headers['host'];
+        delete headers['referer'];
+        delete headers['cookie'];
+        const response = await got('https://youtube.com/feed/trending', {
+            'headers': headers,
+        });
+        const text = await response.body;
+        const fullJSON = text.split('window["ytInitialData"] =')[1].split(';\n    window["ytInitialPlayerResponse"]')[0];
+        const obj = JSON.parse(fullJSON);
+        const trends = obj
+            .contents
+            .twoColumnBrowseResultsRenderer
+            .tabs[0]
+            .tabRenderer
+            .content
+            .sectionListRenderer
+            .contents[0]
+            .itemSectionRenderer
+            .contents[0]
+            .shelfRenderer
+            .content
+            .expandedShelfContentsRenderer
+            .items
+            .map(item => item.videoRenderer);
+        const videoMetas = [];
+        trends.forEach(video => {
+            const thumbnails = video.thumbnail.thumbnails.sort((a, b) => (a.width > b.width ? -1 : 1));
+            const thumbnail = thumbnails[0];
+            videoMetas.push({
+                'url': `https://www.youtube.com/watch?v=${video.videoId}`,
+                'thumbnailUrl': thumbnail.url,
+                'title': video.title.runs[0].text,
+            });
+        })
+        res.json(videoMetas);
+    } catch (error) {
+        console.log(error);
         res.json({'error': 'Failed to load Youtube'});
     }
-})
+});
 
 const rooms = {};
 

@@ -45,3 +45,33 @@ const onSeek = () => {
         selfTrigger--;
     }
 };
+
+const getInternalURL = () => `${window.location.href.replace(window.location.pathname, '')}/internal`;
+
+const parseYoutubeURL = url => {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : false;
+};
+
+const showVideoFromURL = async (roomId, url) => {
+    const response = await fetch(`${getInternalURL()}/video/${parseYoutubeURL(url)}`);
+    const videoMeta = await response.json();
+    if (typeof (videoMeta.error) !== undefined) {
+        Cookies.set(roomId + '-video', url);
+        socket.emit('video', videoMeta);
+        showVideoFromMeta(videoMeta);
+    } else {
+        console.error(videoMeta.error);
+    }
+};
+
+const showVideoFromMeta = data => {
+    video.prop('poster', data.thumbnailUrl);
+    video.html(`<source src="${data.url}" type="${data.mimeType}" />`);
+};
+
+const getTrends = async () => {
+    const response = await fetch(`${getInternalURL()}/trends`);
+    return await response.json();
+};

@@ -1,10 +1,13 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
-const parseYoutubeURL = url => {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[7].length === 11) ? match[7] : false;
-};
+const roomId = window.location.pathname.replace('/rooms/', '');
+let clientId;
+if (Cookies.get('id') === undefined) {
+    clientId = Math.random().toString(36).substr(2);
+    Cookies.set('id', clientId);
+} else {
+    clientId = Cookies.get('id');
+}
 
 const socket = io.connect(window.location.href.replace(window.location.pathname, ''));
 socket.on('connect', async () => {
@@ -39,14 +42,6 @@ socket.on('connect', async () => {
         video.on('pause', onPause);
         video.on('seeked', onSeek);
 
-        const roomId = window.location.pathname.replace('/rooms/', '');
-        let clientId;
-        if (Cookies.get('id') === undefined) {
-            clientId = Math.random().toString(36).substr(2);
-            Cookies.set('id', clientId);
-        } else {
-            clientId = Cookies.get('id');
-        }
         socket.emit('init', {
             'room': roomId,
             'client': clientId,
@@ -62,8 +57,6 @@ socket.on('connect', async () => {
             event.preventDefault();
             const url = $('#video-url-input').val();
             await showVideoFromURL(roomId, url);
-            seek(0);
-            play();
         });
 
         if (Cookies.get('show') === 'true') {
@@ -73,17 +66,13 @@ socket.on('connect', async () => {
     });
 });
 
-const showVideoFromURL = async (roomId, url) => {
-    const response = await fetch(window.location.href.replace(window.location.pathname, '') + '/internal/video/' + parseYoutubeURL(url));
-    const videoMeta = await response.json();
-    Cookies.set(roomId + '-video', url);
-    socket.emit('video', videoMeta);
-    showVideoFromMeta(videoMeta);
-};
-
-const showVideoFromMeta = data => {
-    video.prop('width', data.width);
-    video.prop('height', data.height);
-    video.prop('poster', data.thumbnailUrl);
-    video.html(`<source src="${data.url}" type="${data.mimeType}" />`);
-};
+getTrends().then(videoMetas => {
+    videoMetas.forEach(videoMeta => {
+        $('#inner_trend').append(`<img src="${videoMeta.thumbnailUrl}" class="boxvideo" id="trends-${videoMetas.indexOf(videoMeta)}" alt="${videoMeta.title}"/>`);
+    });
+    $('#inner_trend *').click(async event => {
+        const videoMeta = videoMetas[parseInt(event.target.id.split('-')[1])];
+        await showVideoFromURL(roomId, videoMeta.url);
+        play();
+    });
+});

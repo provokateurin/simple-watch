@@ -9,6 +9,10 @@ server.listen(8000);
 
 app.use('/images', express.static(__dirname + '/images'));
 
+app.get('*/utils.js', function (req, res) {
+    res.sendFile(__dirname + '/shared/utils.js');
+});
+
 app.get('/index.css', function (req, res) {
     res.sendFile(__dirname + '/index/index.css');
 });
@@ -27,14 +31,6 @@ app.get('/rooms/rooms.css', function (req, res) {
 
 app.get('/rooms/rooms.js', function (req, res) {
     res.sendFile(__dirname + '/rooms/rooms.js');
-});
-
-app.get('/rooms/utils.js', function (req, res) {
-    res.sendFile(__dirname + '/rooms/utils.js');
-});
-
-app.get('/rooms/youtube_extractor.js', function (req, res) {
-    res.sendFile(__dirname + '/rooms/youtube_extractor.js');
 });
 
 app.get('/rooms/*', function (req, res) {
@@ -78,37 +74,43 @@ app.get('/internal/video/:id', async (req, res) => {
 });
 
 app.get('/internal/trends', async (req, res) => {
-    try {
-        const headers = req.headers;
-        delete headers['host'];
-        delete headers['referer'];
-        delete headers['cookie'];
-        const response = await got('https://youtube.com/feed/trending', {
-            'headers': headers,
-        });
-        const text = await response.body;
-        const fullJSON = text.split('window["ytInitialData"] =')[1].split(';\n    window["ytInitialPlayerResponse"]')[0];
-        const obj = JSON.parse(fullJSON);
-        const trends = [].concat.apply(
-            [],
-            obj['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents']
-                .filter(r => r['itemSectionRenderer']['contents'][0]['shelfRenderer']['title'] === undefined)
-                .map(r => r['itemSectionRenderer']['contents'][0]['shelfRenderer']['content']['expandedShelfContentsRenderer']['items'])
-        ).map(item => item['videoRenderer']);
-        const videoMetas = [];
-        trends.forEach(video => {
-            const thumbnails = video['thumbnail']['thumbnails'].sort((a, b) => (a.width > b.width ? -1 : 1));
-            const thumbnail = thumbnails[0];
-            videoMetas.push({
-                'url': `https://www.youtube.com/watch?v=${video['videoId']}`,
-                'thumbnailUrl': thumbnail.url,
-                'title': video['title']['runs'][0]['text'],
+    const headers = req.headers;
+    delete headers['host'];
+    delete headers['referer'];
+    delete headers['cookie'];
+    for (let i = 0; i < 5; i++) {
+        try {
+            const response = await got('https://youtube.com/feed/trending', {
+                'headers': headers,
             });
-        })
-        res.json(videoMetas);
-    } catch (error) {
-        console.log(error);
-        res.json({'error': 'Failed to load Youtube'});
+            const text = await response.body;
+            const fullJSON = text.split('window["ytInitialData"] =')[1].split(';\n    window["ytInitialPlayerResponse"]')[0];
+            const obj = JSON.parse(fullJSON);
+            const trends = [].concat.apply(
+                [],
+                obj['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents']
+                    .filter(r => r['itemSectionRenderer']['contents'][0]['shelfRenderer']['title'] === undefined)
+                    .map(r => r['itemSectionRenderer']['contents'][0]['shelfRenderer']['content']['expandedShelfContentsRenderer']['items'])
+            ).map(item => item['videoRenderer']);
+            const videoMetas = [];
+            trends.forEach(video => {
+                const thumbnails = video['thumbnail']['thumbnails'].sort((a, b) => (a.width > b.width ? -1 : 1));
+                const thumbnail = thumbnails[0];
+                videoMetas.push({
+                    'url': `https://www.youtube.com/watch?v=${video['videoId']}`,
+                    'thumbnailUrl': thumbnail.url,
+                    'title': video['title']['runs'][0]['text'],
+                });
+            })
+            res.json(videoMetas);
+            return;
+        } catch (error) {
+            console.log(error);
+            if (i === 4) {
+                res.json({'error': 'Failed to load Youtube'});
+                return;
+            }
+        }
     }
 });
 

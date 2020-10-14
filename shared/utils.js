@@ -46,8 +46,6 @@ const onSeek = () => {
     }
 };
 
-const getInternalURL = () => `${window.location.href.replace(window.location.pathname, '')}/internal`;
-
 const parseYoutubeURL = url => {
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     const match = url.match(regExp);
@@ -57,7 +55,7 @@ const parseYoutubeURL = url => {
 const showVideoFromURL = async (roomId, url) => {
     const id = parseYoutubeURL(url);
     if (id) {
-        const response = await fetch(`${getInternalURL()}/video/${id}`);
+        const response = await fetch(`/internal/video/${id}`);
         const videoMeta = await response.json();
         if (typeof (videoMeta.error) !== undefined) {
             Cookies.set(roomId + '-video', url);
@@ -77,6 +75,6 @@ const showVideoFromMeta = data => {
 };
 
 const getTrends = async () => {
-    const response = await fetch(`${getInternalURL()}/trends`);
+    const response = await fetch(`/internal/trends`);
     return await response.json();
 };

@@ -36,3 +36,15 @@ Then(/^every video has a title$/, function () {
         expect(video.title.length).to.be.above(0);
     });
 });
+Then(/^the trending videos are shown$/, async function () {
+    await this.page.waitForFunction('window.trendsLoaded === true');
+    const childNodes = await (await this.page.evaluate(() => {
+        return document.querySelectorAll('#trends *')
+    }));
+    expect(Object.keys(childNodes).length).to.eql(50)
+});
+When(/^clicking on ([0-9]{1,2}). trending video$/, async function (childIndex) {
+    await this.page.evaluate((childIndex) => {
+        return document.querySelectorAll(`.boxvideo`)[childIndex].click()
+    }, childIndex);
+});

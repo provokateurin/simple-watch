@@ -68,16 +68,3 @@ socket.on('connect', async () => {
         }
     });
 });
-
-/*
-getTrends().then(videoMetas => {
-    videoMetas.forEach(videoMeta => {
-        $('#inner_trend').append(`<img src="${videoMeta.thumbnailUrl}" class="boxvideo" id="trends-${videoMetas.indexOf(videoMeta)}" alt="${videoMeta.title}"/>`);
-    });
-    $('#inner_trend *').click(async event => {
-        const videoMeta = videoMetas[parseInt(event.target.id.split('-')[1])];
-        await showVideoFromURL(roomId, videoMeta.url);
-        play();
-    });
-});
-*/

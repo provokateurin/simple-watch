@@ -16,6 +16,7 @@ socket.on('connect', async () => {
         escapeClose: true,
         clickClose: true,
     });
+    window.dialogShown = true;
     dialog.on($.modal.BEFORE_CLOSE, () => {
         socket.on('state', (data) => {
             console.log('state', data);
@@ -56,7 +57,9 @@ socket.on('connect', async () => {
         videoURLForm.submit(async event => {
             event.preventDefault();
             const url = $('#video-url-input').val();
-            await showVideoFromURL(roomId, url);
+            if (url.length > 0) {
+                await showVideoFromURL(roomId, url);
+            }
         });
 
         if (Cookies.get('show') === 'true') {
@@ -66,6 +69,7 @@ socket.on('connect', async () => {
     });
 });
 
+/*
 getTrends().then(videoMetas => {
     videoMetas.forEach(videoMeta => {
         $('#inner_trend').append(`<img src="${videoMeta.thumbnailUrl}" class="boxvideo" id="trends-${videoMetas.indexOf(videoMeta)}" alt="${videoMeta.title}"/>`);
@@ -76,3 +80,4 @@ getTrends().then(videoMetas => {
         play();
     });
 });
+*/

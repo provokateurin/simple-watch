@@ -55,14 +55,19 @@ const parseYoutubeURL = url => {
 };
 
 const showVideoFromURL = async (roomId, url) => {
-    const response = await fetch(`${getInternalURL()}/video/${parseYoutubeURL(url)}`);
-    const videoMeta = await response.json();
-    if (typeof (videoMeta.error) !== undefined) {
-        Cookies.set(roomId + '-video', url);
-        socket.emit('video', videoMeta);
-        showVideoFromMeta(videoMeta);
+    const id = parseYoutubeURL(url);
+    if (id) {
+        const response = await fetch(`${getInternalURL()}/video/${id}`);
+        const videoMeta = await response.json();
+        if (typeof (videoMeta.error) !== undefined) {
+            Cookies.set(roomId + '-video', url);
+            socket.emit('video', videoMeta);
+            showVideoFromMeta(videoMeta);
+        } else {
+            console.error(videoMeta.error);
+        }
     } else {
-        console.error(videoMeta.error);
+        throw 'Failed to parse Youtube URL';
     }
 };
 

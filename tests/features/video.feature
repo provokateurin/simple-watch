@@ -4,7 +4,7 @@ Feature: Video
   play the video on the
   rooms page
 
-  Scenario Outline: eating
+  Scenario Outline: Video fetching
     Given a user-agent
     When fetching a video with the id <id>
     Then the video has an URL

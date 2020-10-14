@@ -3,7 +3,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const got = require('got');
-const ytdl = require('ytdl-core');
+const querystring = require('querystring');
 
 server.listen(8000);
 
@@ -46,22 +46,32 @@ app.get('/rooms', (req, res) => {
 });
 
 app.get('/internal/video/:id', async (req, res) => {
+    const headers = req.headers;
+    delete headers['host'];
+    delete headers['referer'];
+    delete headers['cookie'];
+    const id = req.params.id;
+    const url = `https://www.youtube.com/get_video_info?html5=1&video_id=${id}`
     try {
-        const url = `https://youtube.com/watch?v=${req.params.id}`;
-        const info = await ytdl.getInfo(url);
-        const formats = info.player_response.streamingData.formats
+        const response = await got(url, {
+            'headers': headers,
+        });
+        const body = await response.body;
+        const playerResponse = JSON.parse(querystring.parse(body)['player_response']);
+        const formats = playerResponse['streamingData']['formats']
             .sort((a, b) => (a.width > b.width ? -1 : 1))
             .filter(format => format.url !== undefined);
         const format = formats[0];
-        res.json({
+        return res.json({
             'url': format.url,
             'mimeType': format.mimeType,
             'thumbnailUrl': `https://i3.ytimg.com/vi/${req.params.id}/maxresdefault.jpg`,
-            'title': info.player_response.videoDetails.title,
+            'title': playerResponse['videoDetails']['title'],
         });
+
     } catch (error) {
         console.log(error);
-        res.json({
+        return res.json({
             'error': 'Failed to load Youtube',
         });
     }
@@ -79,29 +89,20 @@ app.get('/internal/trends', async (req, res) => {
         const text = await response.body;
         const fullJSON = text.split('window["ytInitialData"] =')[1].split(';\n    window["ytInitialPlayerResponse"]')[0];
         const obj = JSON.parse(fullJSON);
-        const trends = obj
-            .contents
-            .twoColumnBrowseResultsRenderer
-            .tabs[0]
-            .tabRenderer
-            .content
-            .sectionListRenderer
-            .contents[0]
-            .itemSectionRenderer
-            .contents[0]
-            .shelfRenderer
-            .content
-            .expandedShelfContentsRenderer
-            .items
-            .map(item => item.videoRenderer);
+        const trends = [].concat.apply(
+            [],
+            obj['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents']
+                .filter(r => r['itemSectionRenderer']['contents'][0]['shelfRenderer']['title'] === undefined)
+                .map(r => r['itemSectionRenderer']['contents'][0]['shelfRenderer']['content']['expandedShelfContentsRenderer']['items'])
+        ).map(item => item['videoRenderer']);
         const videoMetas = [];
         trends.forEach(video => {
-            const thumbnails = video.thumbnail.thumbnails.sort((a, b) => (a.width > b.width ? -1 : 1));
+            const thumbnails = video['thumbnail']['thumbnails'].sort((a, b) => (a.width > b.width ? -1 : 1));
             const thumbnail = thumbnails[0];
             videoMetas.push({
-                'url': `https://www.youtube.com/watch?v=${video.videoId}`,
+                'url': `https://www.youtube.com/watch?v=${video['videoId']}`,
                 'thumbnailUrl': thumbnail.url,
-                'title': video.title.runs[0].text,
+                'title': video['title']['runs'][0]['text'],
             });
         })
         res.json(videoMetas);

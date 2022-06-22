@@ -14,7 +14,7 @@
   "dependencies": {
     "cucumber": "^6.0.5",
     "express": "^4.17.1",
-    "got": "^10.7.0",
+    "got": "^11.8.5",
     "http": "^0.0.1-security",
     "querystring": "^0.2.0",
     "socket.io": "^2.3.0"
